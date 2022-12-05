@@ -4,81 +4,50 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
 
-public class Day3 {
-    public static void main(String[] args) {
-        try {
-          String dataTest="""
-                  vJrwpWtwJgWrhcsFMMfFFhFp
-                  jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-                  PmmdzqPrVvPwwTWBwg
-                  wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-                  ttgJtRGJQctTZtZT
-                  CrZsJsPPZsGzwwsLwLmpwMDw
-                  """;
+public class Day3 extends  InputData{
 
-
-            BufferedReader br = new BufferedReader(new FileReader("input_3/input.txt"));
-            int score = 0;
-            String alfabet= "0abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//
-//             // for (String line : dataTest.split("\n")) {
-//                int[ ] chars=new int [line.length()];
-//                int i=0;
-//                for (String e: line.split("")) {
-//                    chars[i]=alfabet.indexOf(e);
-//                    i++;
-//
-//                }
-//                int[] first = Arrays.copyOfRange(chars, 0, chars.length / 2);
-//                int[] second = Arrays.copyOfRange(chars, chars.length / 2, chars.length);
-//                Set<Integer> scores = new HashSet<>();
-//                for (int k = 0; k < first.length; k++) {
-//                    for (int j = 0; j < second.length; j++) {
-//                        if (first[k] == second[j]) {
-//                            scores.add(first[k]);
-//                        }
-//                    }
-//                }
-//                score += scores.stream().reduce((a, b) -> a + b).get();
-//            }
-//
-//            System.out.println(score);
-
-            List<Set<Integer>> lists = new ArrayList<>();
-            lists.add(new HashSet<>());
-            lists.add(new HashSet<>());
-            lists.add(new HashSet<>());
-            int listIdx = 0;
-            String line;
-            while ((line = br.readLine()) != null) {
-                //for (String line : testdata.split("\n")) {
-                for (String e : line.split("")) {
-                    lists.get(listIdx).add(alfabet.indexOf(e));
-                }
-                listIdx++;
-                if (listIdx < 3) {
-                    continue;
-                }
-
-                lists.get(0).retainAll(lists.get(1));
-                lists.get(0).retainAll(lists.get(2));
-
-                score += lists.get(0).stream().reduce((a, b) -> a + b).get();
-
-                lists = new ArrayList<>();
-                lists.add(new HashSet<>());
-                lists.add(new HashSet<>());
-                lists.add(new HashSet<>());
-                listIdx = 0;
-            }
-            System.out.println(score);
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public Day3(String day) {
+        super(day);
     }
 
+    @Override
+    void solve(List<String> input) {
+        int sum = 0;
+        for(String s : input)
+            sum += andStringsToNum(s.substring(0, s.length() / 2), s.substring(s.length() / 2));
+        lap(sum);
+
+        sum = 0;
+        for(int i = 0; i < input.size(); i += 3)
+            sum += andStringsToNum(input.get(i), input.get(i + 1), input.get(i + 2));
+        lap(sum);
+    }
+
+    public int andStringsToNum(String... strs)
+    {
+        String and = strs[0];
+        for(int i = 1; i < strs.length; i++)
+            and = andStrings(and, strs[i]);
+        char c = and.charAt(0);
+        return (c - (c <= 'Z' ? 'A' : 'a')) + (c <= 'Z' ? 27 : 1);
+    }
+
+    public String andStrings(String s1, String s2)
+    {
+        StringBuilder builder = new StringBuilder();
+        char[] s2Chars = s2.toCharArray();
+        for(char c : s1.toCharArray())
+        {
+            for(char c2 : s2Chars)
+            {
+                if(c == c2)
+                {
+                    builder.append(c);
+                    break;
+                }
+            }
+        }
+
+        return builder.toString();
+    }
 }
