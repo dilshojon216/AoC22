@@ -6,6 +6,7 @@ public class SolutionsAoC22 {
         //new Day4("4");
 
         // new Day5("5");
-         new Day6("6");
+//         new Day6("6");
+         new Day7("7");
     }
 }
